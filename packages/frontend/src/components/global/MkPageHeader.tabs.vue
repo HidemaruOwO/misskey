@@ -4,35 +4,28 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div ref="el" :class="$style.tabs" @wheel="onTabWheel">
-	<div :class="$style.tabsInner">
-		<button
-			v-for="t in tabs" :ref="(el) => tabRefs[t.key] = (el as HTMLElement)" v-tooltip.noDelay="t.title"
-			class="_button" :class="[$style.tab, { [$style.active]: t.key != null && t.key === props.tab, [$style.animate]: defaultStore.reactiveState.animation.value }]"
-			@mousedown="(ev) => onTabMousedown(t, ev)" @click="(ev) => onTabClick(t, ev)"
-		>
-			<div :class="$style.tabInner">
-				<i v-if="t.icon" :class="[$style.tabIcon, t.icon]"></i>
-				<div
-					v-if="!t.iconOnly || (!defaultStore.reactiveState.animation.value && t.key === tab)"
-					:class="$style.tabTitle"
-				>
-					{{ t.title }}
+	<div ref="el" :class="$style.tabs" @wheel="onTabWheel">
+		<div :class="$style.tabsInner">
+			<button v-for="t in tabs" :ref="(el) => tabRefs[t.key] = (el as HTMLElement)" v-tooltip.noDelay="t.title"
+				class="_button"
+				:class="[$style.tab, { [$style.active]: t.key != null && t.key === props.tab, [$style.animate]: defaultStore.reactiveState.animation.value }]"
+				@mousedown="(ev) => onTabMousedown(t, ev)" @click="(ev) => onTabClick(t, ev)">
+				<div :class="$style.tabInner">
+					<i v-if="t.icon" :class="[$style.tabIcon, t.icon]"></i>
+					<div v-if="!t.iconOnly || (!defaultStore.reactiveState.animation.value && t.key === tab)"
+						:class="$style.tabTitle">
+						{{ t.title }}
+					</div>
+					<Transition v-else mode="in-out" @enter="enter" @afterEnter="afterEnter" @leave="leave"
+						@afterLeave="afterLeave">
+						<div v-show="t.key === tab" :class="[$style.tabTitle, $style.animate]">{{ t.title }}</div>
+					</Transition>
 				</div>
-				<Transition
-					v-else mode="in-out" @enter="enter" @afterEnter="afterEnter" @leave="leave"
-					@afterLeave="afterLeave"
-				>
-					<div v-show="t.key === tab" :class="[$style.tabTitle, $style.animate]">{{ t.title }}</div>
-				</Transition>
-			</div>
-		</button>
+			</button>
+		</div>
+		<div ref="tabHighlightEl"
+			:class="[$style.tabHighlight, { [$style.animate]: defaultStore.reactiveState.animation.value }]"></div>
 	</div>
-	<div
-		ref="tabHighlightEl"
-		:class="[$style.tabHighlight, { [$style.animate]: defaultStore.reactiveState.animation.value }]"
-	></div>
-</div>
 </template>
 
 <script lang="ts">
@@ -40,16 +33,16 @@ export type Tab = {
 	key: string;
 	onClick?: (ev: MouseEvent) => void;
 } & (
-	| {
+		| {
 			iconOnly?: false;
 			title: string;
 			icon?: string;
 		}
-	| {
+		| {
 			iconOnly: true;
 			icon: string;
 		}
-);
+	);
 </script>
 
 <script lang="ts" setup>
@@ -158,6 +151,9 @@ onMounted(() => {
 	watch([() => props.tab, () => props.tabs], () => {
 		nextTick(() => {
 			if (entering) return;
+			if (props.tab === 'home') {
+				emit('update:tab', 'social');
+			}
 			renderTab();
 		});
 	}, {
@@ -228,7 +224,7 @@ onUnmounted(() => {
 	align-items: center;
 }
 
-.tabIcon + .tabTitle {
+.tabIcon+.tabTitle {
 	padding-left: 4px;
 }
 
