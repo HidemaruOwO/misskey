@@ -151,9 +151,6 @@ onMounted(() => {
 	watch([() => props.tab, () => props.tabs], () => {
 		nextTick(() => {
 			if (entering) return;
-			if (props.tab === 'home') {
-				emit('update:tab', 'social');
-			}
 			renderTab();
 		});
 	}, {

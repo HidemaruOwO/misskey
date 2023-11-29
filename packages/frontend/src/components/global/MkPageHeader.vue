@@ -4,40 +4,46 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div v-if="show" ref="el" :class="[$style.root]" :style="{ background: bg }">
-	<div :class="[$style.upper, { [$style.slim]: narrow, [$style.thin]: thin_ }]">
-		<div v-if="!thin_ && narrow && props.displayMyAvatar && $i" class="_button" :class="$style.buttonsLeft" @click="openAccountMenu">
-			<MkAvatar :class="$style.avatar" :user="$i"/>
-		</div>
-		<div v-else-if="!thin_ && narrow && !hideTitle" :class="$style.buttonsLeft"/>
+	<div v-if="show" ref="el" :class="[$style.root]" :style="{ background: bg }">
+		<div :class="[$style.upper, { [$style.slim]: narrow, [$style.thin]: thin_ }]">
+			<div v-if="!thin_ && narrow && props.displayMyAvatar && $i" class="_button" :class="$style.buttonsLeft"
+				@click="openAccountMenu">
+				<MkAvatar :class="$style.avatar" :user="$i" />
+			</div>
+			<div v-else-if="!thin_ && narrow && !hideTitle" :class="$style.buttonsLeft" />
 
-		<template v-if="metadata">
-			<div v-if="!hideTitle" :class="$style.titleContainer" @click="top">
-				<div v-if="metadata.avatar" :class="$style.titleAvatarContainer">
-					<MkAvatar :class="$style.titleAvatar" :user="metadata.avatar" indicator/>
-				</div>
-				<i v-else-if="metadata.icon" :class="[$style.titleIcon, metadata.icon]"></i>
+			<template v-if="metadata">
+				<div v-if="!hideTitle" :class="$style.titleContainer" @click="top">
+					<div v-if="metadata.avatar" :class="$style.titleAvatarContainer">
+						<MkAvatar :class="$style.titleAvatar" :user="metadata.avatar" indicator />
+					</div>
+					<i v-else-if="metadata.icon" :class="[$style.titleIcon, metadata.icon]"></i>
 
-				<div :class="$style.title">
-					<MkUserName v-if="metadata.userName" :user="metadata.userName" :nowrap="true"/>
-					<div v-else-if="metadata.title">{{ metadata.title }}</div>
-					<div v-if="metadata.subtitle" :class="$style.subtitle">
-						{{ metadata.subtitle }}
+					<div :class="$style.title">
+						<MkUserName v-if="metadata.userName" :user="metadata.userName" :nowrap="true" />
+						<div v-else-if="metadata.title">{{ metadata.title }}</div>
+						<div v-if="metadata.subtitle" :class="$style.subtitle">
+							{{ metadata.subtitle }}
+						</div>
 					</div>
 				</div>
-			</div>
-			<XTabs v-if="!narrow || hideTitle" :class="$style.tabs" :tab="tab" :tabs="tabs" :rootEl="el" @update:tab="key => emit('update:tab', key)" @tabClick="onTabClick"/>
-		</template>
-		<div v-if="(!thin_ && narrow && !hideTitle) || (actions && actions.length > 0)" :class="$style.buttonsRight">
-			<template v-for="action in actions">
-				<button v-tooltip.noDelay="action.text" class="_button" :class="[$style.button, { [$style.highlighted]: action.highlighted }]" @click.stop="action.handler" @touchstart="preventDrag"><i :class="action.icon"></i></button>
+				<XTabs v-if="!narrow || hideTitle" :class="$style.tabs" :tab="tab" :tabs="tabs" :rootEl="el"
+					@update:tab="key => emit('update:tab', key)" @tabClick="onTabClick" />
 			</template>
+			<div v-if="(!thin_ && narrow && !hideTitle) || (actions && actions.length > 0)" :class="$style.buttonsRight">
+				<template v-for="action in actions">
+					<button v-tooltip.noDelay="action.text" class="_button"
+						:class="[$style.button, { [$style.highlighted]: action.highlighted }]" @click.stop="action.handler"
+						@touchstart="preventDrag"><i :class="action.icon"></i></button>
+				</template>
+			</div>
+		</div>
+		<div v-if="(narrow && !hideTitle) && hasTabs"
+			:class="[$style.lower, { [$style.slim]: narrow, [$style.thin]: thin_ }]">
+			<XTabs :class="$style.tabs" :tab="tab" :tabs="tabs" :rootEl="el" @update:tab="key => emit('update:tab', key)"
+				@tabClick="onTabClick" />
 		</div>
 	</div>
-	<div v-if="(narrow && !hideTitle) && hasTabs" :class="[$style.lower, { [$style.slim]: narrow, [$style.thin]: thin_ }]">
-		<XTabs :class="$style.tabs" :tab="tab" :tabs="tabs" :rootEl="el" @update:tab="key => emit('update:tab', key)" @tabClick="onTabClick"/>
-	</div>
-</div>
 </template>
 
 <script lang="ts" setup>
@@ -156,15 +162,17 @@ onUnmounted(() => {
 		margin-left: auto;
 		padding: 0 12px;
 	}
+
 	.tabs {
 		margin-right: auto;
+		margin-left: auto;
 	}
 
 	&.thin {
 		--height: 40px;
 
-		> .buttons {
-			> .button {
+		>.buttons {
+			>.button {
 				font-size: 0.9em;
 			}
 		}
@@ -177,7 +185,8 @@ onUnmounted(() => {
 		.tabs:first-child {
 			margin-left: 0;
 		}
-		> .titleContainer {
+
+		>.titleContainer {
 			margin: 0 auto;
 			max-width: 100%;
 		}
@@ -195,6 +204,7 @@ onUnmounted(() => {
 	align-items: center;
 	min-width: var(--height);
 	height: var(--height);
+
 	&:empty {
 		width: var(--height);
 	}
@@ -239,7 +249,7 @@ onUnmounted(() => {
 }
 
 .fullButton {
-	& + .fullButton {
+	&+.fullButton {
 		margin-left: 12px;
 	}
 }
@@ -297,7 +307,7 @@ onUnmounted(() => {
 	&.activeTab {
 		text-align: center;
 
-		> .chevron {
+		>.chevron {
 			display: inline-block;
 			margin-left: 6px;
 		}
