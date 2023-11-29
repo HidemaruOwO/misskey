@@ -137,7 +137,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkInfo v-else-if="$i && $i.id === user.id">{{ i18n.ts.userPagePinTip }}</MkInfo>
 					<template v-if="narrow">
 						<XFiles :key="user.id" :user="user" />
-						<XActivity :key="user.id" :user="user" />
 					</template>
 					<div v-if="!disableNotes">
 						<div style="margin-bottom: 8px;">{{ i18n.ts.featured }}</div>
@@ -147,7 +146,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 			<div v-if="!narrow" class="sub _gaps" style="container-type: inline-size;">
 				<XFiles :key="user.id" :user="user" />
-				<XActivity :key="user.id" :user="user" />
 			</div>
 		</div>
 	</MkSpacer>
@@ -194,7 +192,6 @@ function calcAge(birthdate: string): number {
 }
 
 const XFiles = defineAsyncComponent(() => import('./index.files.vue'));
-const XActivity = defineAsyncComponent(() => import('./index.activity.vue'));
 
 const props = withDefaults(defineProps<{
 	user: Misskey.entities.UserDetailed;
