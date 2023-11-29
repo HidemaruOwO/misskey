@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<MkSpacer :contentMax="800">
 			<div ref="rootEl" v-hotkey.global="keymap">
 				<MkInfo
-					v-if="['home', 'local', 'social', 'global'].includes(src) && !defaultStore.reactiveState.timelineTutorials.value[src]"
+					v-if="['local', 'social', 'global'].includes(src) && !defaultStore.reactiveState.timelineTutorials.value[src]"
 					style="margin-bottom: var(--margin);" closable @close="closeTutorial()">
 					{{ i18n.ts._timelineDescription[src] }}
 				</MkInfo>
@@ -114,7 +114,7 @@ async function chooseChannel(ev: MouseEvent): Promise<void> {
 	os.popupMenu(items, ev.currentTarget ?? ev.target);
 }
 
-function saveSrc(newSrc: 'home' | 'local' | 'social' | 'global' | `list:${string}`): void {
+function saveSrc(newSrc: 'social' | 'local' | 'global' | `list:${string}`): void {
 	let userList = null;
 	if (newSrc.startsWith('userList:')) {
 		const id = newSrc.substring('userList:'.length);
@@ -141,7 +141,7 @@ function focus(): void {
 }
 
 function closeTutorial(): void {
-	if (!['home', 'local', 'social', 'global'].includes(src)) return;
+	if (!['local', 'social', 'global'].includes(src)) return;
 	const before = defaultStore.state.timelineTutorials;
 	before[src] = true;
 	defaultStore.set('timelineTutorials', before);
