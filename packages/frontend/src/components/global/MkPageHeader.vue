@@ -165,6 +165,7 @@ onUnmounted(() => {
 
 	.tabs {
 		margin-right: auto;
+		margin-left: auto;
 	}
 
 	&.thin {
