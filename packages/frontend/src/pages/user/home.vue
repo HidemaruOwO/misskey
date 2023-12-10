@@ -123,7 +123,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 				<div class="contents _gaps">
 					<div v-if="user.pinnedNotes.length > 0" class="_gaps">
-						<MkNote v-for="note in user.pinnedNotes" :key="note.id" class="note _panel" :note="note" :pinned="true" />
+						<MkContainer :foldable="true" :expanded="false">
+							<template #icon><i class="ti ti-pin"></i></template>
+							<template #header>{{ i18n.ts.pinnedNotes }}</template>
+
+							<MkNote v-for="note in user.pinnedNotes" :key="note.id" class="note _panel" :note="note" :pinned="true" />
+						</MkContainer>
 					</div>
 					<MkInfo v-else-if="$i && $i.id === user.id">{{ i18n.ts.userPagePinTip }}</MkInfo>
 					<template v-if="narrow">
@@ -146,6 +151,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { defineAsyncComponent, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkNote from '@/components/MkNote.vue';
+//import MkFolder from '@/components/MkFolder.vue';
+import MkContainer from '@/components/MkContainer.vue';
 import MkFollowButton from '@/components/MkFollowButton.vue';
 import MkAccountMoved from '@/components/MkAccountMoved.vue';
 import MkRemoteCaution from '@/components/MkRemoteCaution.vue';
@@ -466,6 +473,7 @@ onUnmounted(() => {
 						}
 					}
 				}
+
 				@media screen and (min-width: 531px) {
 					>.roles {
 						padding: 24px 24px 0 154px;
