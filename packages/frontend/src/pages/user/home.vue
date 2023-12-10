@@ -459,18 +459,36 @@ onUnmounted(() => {
 					box-shadow: 1px 1px 3px rgba(#000, 0.2);
 				}
 
-				>.roles {
-					padding: 24px 24px 0 154px;
-					font-size: 0.95em;
-					display: flex;
-					flex-wrap: wrap;
-					gap: 8px;
+				@media screen and (max-width: 530px) {
+					>.roles {
+						// padding: 24px 24px 0 154px;
+						font-size: 0.95em;
+						display: flex;
+						flex-wrap: wrap;
+						gap: 8px;
 
-					>.role {
-						border: solid 1px var(--color, var(--divider));
-						border-radius: 999px;
-						margin-right: 4px;
-						padding: 3px 8px;
+						>.role {
+							border: solid 1px var(--color, var(--divider));
+							border-radius: 999px;
+							margin-right: 4px;
+							padding: 3px 8px;
+						}
+					}
+				}
+				@media screen and (min-width: 531px) {
+					>.roles {
+						padding: 24px 24px 0 154px;
+						font-size: 0.95em;
+						display: flex;
+						flex-wrap: wrap;
+						gap: 8px;
+
+						>.role {
+							border: solid 1px var(--color, var(--divider));
+							border-radius: 999px;
+							margin-right: 4px;
+							padding: 3px 8px;
+						}
 					}
 				}
 
@@ -687,4 +705,5 @@ onUnmounted(() => {
 .verifiedLink {
 	margin-left: 4px;
 	color: var(--success);
-}</style>
+}
+</style>
