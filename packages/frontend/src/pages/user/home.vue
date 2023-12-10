@@ -64,15 +64,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 								</MkA>
 							</span>
 						</div>
-						<div v-if="iAmModerator" class="moderationNote">
-							<MkTextarea v-if="editModerationNote || (moderationNote != null && moderationNote !== '')"
-								v-model="moderationNote" manualSave>
-								<template #label>{{ i18n.ts.moderationNote }}</template>
-							</MkTextarea>
-							<div v-else>
-								<MkButton small @click="editModerationNote = true">{{ i18n.ts.addModerationNote }}</MkButton>
-							</div>
-						</div>
 						<div v-if="isEditingMemo || memoDraft" class="memo" :class="{ 'no-memo': !memoDraft }">
 							<div class="heading" v-text="i18n.ts.memo" />
 							<textarea ref="memoTextareaEl" v-model="memoDraft" rows="1" @focus="isEditingMemo = true" @blur="updateMemo"
@@ -132,7 +123,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 				<div class="contents _gaps">
 					<div v-if="user.pinnedNotes.length > 0" class="_gaps">
-						<MkNote v-for="note in user.pinnedNotes" :key="note.id" class="note _panel" :note="note" :pinned="true" />
+						<MkContainer :foldable="true" :expanded="false">
+							<template #icon><i class="ti ti-pin"></i></template>
+							<template #header>{{ i18n.ts.pinnedNotes }}</template>
+
+							<MkNote v-for="note in user.pinnedNotes" :key="note.id" class="note _panel" :note="note" :pinned="true" />
+						</MkContainer>
 					</div>
 					<MkInfo v-else-if="$i && $i.id === user.id">{{ i18n.ts.userPagePinTip }}</MkInfo>
 					<template v-if="narrow">
@@ -155,6 +151,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { defineAsyncComponent, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkNote from '@/components/MkNote.vue';
+//import MkFolder from '@/components/MkFolder.vue';
+import MkContainer from '@/components/MkContainer.vue';
 import MkFollowButton from '@/components/MkFollowButton.vue';
 import MkAccountMoved from '@/components/MkAccountMoved.vue';
 import MkRemoteCaution from '@/components/MkRemoteCaution.vue';
@@ -459,18 +457,37 @@ onUnmounted(() => {
 					box-shadow: 1px 1px 3px rgba(#000, 0.2);
 				}
 
-				>.roles {
-					padding: 24px 24px 0 154px;
-					font-size: 0.95em;
-					display: flex;
-					flex-wrap: wrap;
-					gap: 8px;
+				@media screen and (max-width: 530px) {
+					>.roles {
+						// padding: 24px 24px 0 154px;
+						font-size: 0.95em;
+						display: flex;
+						flex-wrap: wrap;
+						gap: 8px;
 
-					>.role {
-						border: solid 1px var(--color, var(--divider));
-						border-radius: 999px;
-						margin-right: 4px;
-						padding: 3px 8px;
+						>.role {
+							border: solid 1px var(--color, var(--divider));
+							border-radius: 999px;
+							margin-right: 4px;
+							padding: 3px 8px;
+						}
+					}
+				}
+
+				@media screen and (min-width: 531px) {
+					>.roles {
+						padding: 24px 24px 0 154px;
+						font-size: 0.95em;
+						display: flex;
+						flex-wrap: wrap;
+						gap: 8px;
+
+						>.role {
+							border: solid 1px var(--color, var(--divider));
+							border-radius: 999px;
+							margin-right: 4px;
+							padding: 3px 8px;
+						}
 					}
 				}
 
@@ -687,4 +704,5 @@ onUnmounted(() => {
 .verifiedLink {
 	margin-left: 4px;
 	color: var(--success);
-}</style>
+}
+</style>
